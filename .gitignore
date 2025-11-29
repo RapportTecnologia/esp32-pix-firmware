@@ -1,4 +1,7 @@
 build/
 .cache/
+.vscode/
+managed_components/
+.devcontainer/
 .sdkconfig.old
 .clangd
