@@ -14,7 +14,7 @@ menu "ESP-PIX Configuration"
 
     config ESP_PIX_BACKEND_URL
         string "Backend URL"
-        default "https://localhost:3000/api"
+        default "https://cafeexpresso.rapport.tec.br/api"
         help
             Backend API URL for PIX payments (HTTPS required).
 
@@ -32,7 +32,7 @@ menu "ESP-PIX Configuration"
 
     config ESP_PIX_BUZZER_GPIO
         int "Buzzer GPIO"
-        default 15
+        default 21
         help
             GPIO pin for buzzer.
 
@@ -50,13 +50,13 @@ menu "ESP-PIX Configuration"
 
     config ESP_PIX_TFT_DC_GPIO
         int "TFT DC GPIO"
-        default 16
+        default 20
         help
             GPIO pin for TFT data/command.
 
     config ESP_PIX_TFT_RST_GPIO
         int "TFT Reset GPIO"
-        default 17
+        default 22
         help
             GPIO pin for TFT reset.
 
@@ -68,7 +68,7 @@ menu "ESP-PIX Configuration"
 
     config ESP_PIX_TFT_SCK_GPIO
         int "TFT SCK GPIO"
-        default 18
+        default 6
         help
             GPIO pin for SPI clock.
 
