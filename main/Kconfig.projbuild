@@ -1,0 +1,81 @@
+menu "ESP-PIX Configuration"
+
+    config ESP_PIX_WIFI_SSID
+        string "WiFi SSID"
+        default "EDILMA_2.5"
+        help
+            SSID (network name) for the PIX device to connect to.
+
+    config ESP_PIX_WIFI_PASSWORD
+        string "WiFi Password"
+        default "password"
+        help
+            WiFi password (WPA or WPA2) for the PIX device.
+
+    config ESP_PIX_BACKEND_URL
+        string "Backend URL"
+        default "https://localhost:3000/api"
+        help
+            Backend API URL for PIX payments (HTTPS required).
+
+    config ESP_PIX_LED_GPIO
+        int "LED GPIO"
+        default 2
+        help
+            GPIO pin for status LED.
+
+    config ESP_PIX_BUTTON_GPIO
+        int "Button GPIO"
+        default 4
+        help
+            GPIO pin for button input.
+
+    config ESP_PIX_BUZZER_GPIO
+        int "Buzzer GPIO"
+        default 15
+        help
+            GPIO pin for buzzer.
+
+    config ESP_PIX_SERVO_GPIO
+        int "Servo GPIO"
+        default 13
+        help
+            GPIO pin for servo motor.
+
+    config ESP_PIX_TFT_CS_GPIO
+        int "TFT CS GPIO"
+        default 5
+        help
+            GPIO pin for TFT chip select.
+
+    config ESP_PIX_TFT_DC_GPIO
+        int "TFT DC GPIO"
+        default 16
+        help
+            GPIO pin for TFT data/command.
+
+    config ESP_PIX_TFT_RST_GPIO
+        int "TFT Reset GPIO"
+        default 17
+        help
+            GPIO pin for TFT reset.
+
+    config ESP_PIX_TFT_MOSI_GPIO
+        int "TFT MOSI GPIO"
+        default 23
+        help
+            GPIO pin for SPI MOSI.
+
+    config ESP_PIX_TFT_SCK_GPIO
+        int "TFT SCK GPIO"
+        default 18
+        help
+            GPIO pin for SPI clock.
+
+    config ESP_PIX_PAYMENT_TIMEOUT_MS
+        int "Payment Timeout (ms)"
+        default 60000
+        help
+            Timeout in milliseconds for QR code payment.
+
+endmenu

@@ -1,0 +1,21 @@
+idf_component_register(
+    SRCS 
+        "app_main.c"
+        "wifi_manager.c"
+        "http_client.c"
+        "display_st7735.c"
+        "qrcode_gen.c"
+        "servo_ctrl.c"
+        "buzzer.c"
+    INCLUDE_DIRS "."
+    REQUIRES 
+        driver
+        esp_wifi
+        esp_http_client
+        nvs_flash
+        esp_netif
+        json
+        esp_timer
+    EMBED_TXTFILES
+        "certs/isrg_root_x1.pem"
+)
