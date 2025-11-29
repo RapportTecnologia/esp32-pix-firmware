@@ -82,6 +82,75 @@ static esp_err_t save_api_key_to_nvs(const char *key)
 }
 
 /**
+ * @brief Handler for GET / (root page)
+ */
+static esp_err_t root_handler(httpd_req_t *req)
+{
+    ESP_LOGI(TAG, "GET /");
+    
+    static const char *html_page = 
+        "<!DOCTYPE html>"
+        "<html lang=\"pt-BR\">"
+        "<head>"
+        "<meta charset=\"UTF-8\">"
+        "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">"
+        "<title>ESP32-PIX</title>"
+        "<style>"
+        "*{margin:0;padding:0;box-sizing:border-box;}"
+        "body{font-family:system-ui,-apple-system,sans-serif;background:linear-gradient(135deg,#1a1a2e 0%,#16213e 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;color:#fff;}"
+        ".container{max-width:600px;padding:40px;text-align:center;}"
+        "h1{font-size:2.5rem;margin-bottom:10px;background:linear-gradient(90deg,#00d4ff,#00ff88);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}"
+        ".subtitle{color:#888;margin-bottom:30px;font-size:1.1rem;}"
+        ".card{background:rgba(255,255,255,0.05);border-radius:16px;padding:30px;margin:20px 0;border:1px solid rgba(255,255,255,0.1);}"
+        ".card h2{color:#00d4ff;margin-bottom:15px;}"
+        ".card p{color:#aaa;line-height:1.6;}"
+        ".endpoints{text-align:left;margin-top:20px;}"
+        ".endpoint{background:rgba(0,212,255,0.1);padding:12px 16px;border-radius:8px;margin:8px 0;font-family:monospace;font-size:0.9rem;}"
+        ".endpoint span{color:#00ff88;}"
+        "a{color:#00d4ff;text-decoration:none;}"
+        "a:hover{text-decoration:underline;}"
+        ".footer{margin-top:30px;color:#666;font-size:0.85rem;}"
+        "</style>"
+        "</head>"
+        "<body>"
+        "<div class=\"container\">"
+        "<h1>ESP32-PIX</h1>"
+        "<p class=\"subtitle\">Terminal PIX com ESP32</p>"
+        "<div class=\"card\">"
+        "<h2>Sobre o Projeto</h2>"
+        "<p>ESP32-PIX é um terminal de pagamentos PIX baseado em ESP32. "
+        "Permite receber pagamentos instantâneos via QR Code PIX com display integrado.</p>"
+        "</div>"
+        "<div class=\"card\">"
+        "<h2>Endpoints Disponíveis</h2>"
+        "<div class=\"endpoints\">"
+        "<div class=\"endpoint\"><span>GET</span> /status - Status do dispositivo</div>"
+        "<div class=\"endpoint\"><span>GET</span> /addapikey?key=KEY - Configurar API Key</div>"
+        "</div>"
+        "</div>"
+        "<div class=\"card\">"
+        "<h2>Obtenha o Projeto</h2>"
+        "<p>Código fonte disponível em:<br>"
+        "<a href=\"https://github.com/RapportTecnologia/esp32-pix-firmware\" target=\"_blank\">github.com/RapportTecnologia/esp32-pix-firmware</a></p>"
+        "</div>"
+        "<div class=\"footer\">"
+        "<p><a href=\"https://rapport.tec.br\" target=\"_blank\">rapport.tec.br</a></p>"
+        "<p>E-mail: <a href=\"mailto:admin@rapport.tec.br\">admin@rapport.tec.br</a></p>"
+        "<p>WhatsApp: <a href=\"https://wa.me/5585985205490\" target=\"_blank\">(+55 85) 98520-5490</a></p>"
+        "<p style=\"margin-top:15px;\">&copy; 2024 ESP32-PIX Project</p>"
+        "</div>"
+        "</div>"
+        "</body>"
+        "</html>";
+    
+    httpd_resp_set_type(req, "text/html");
+    httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
+    httpd_resp_send(req, html_page, HTTPD_RESP_USE_STRLEN);
+    
+    return ESP_OK;
+}
+
+/**
  * @brief Handler for GET /status endpoint
  */
 static esp_err_t status_handler(httpd_req_t *req)
@@ -183,6 +252,13 @@ static esp_err_t addapikey_handler(httpd_req_t *req)
 /**
  * @brief URI handlers registration
  */
+static const httpd_uri_t uri_root = {
+    .uri       = "/",
+    .method    = HTTP_GET,
+    .handler   = root_handler,
+    .user_ctx  = NULL
+};
+
 static const httpd_uri_t uri_status = {
     .uri       = "/status",
     .method    = HTTP_GET,
@@ -214,6 +290,7 @@ esp_err_t http_server_start(void)
         ESP_LOGI(TAG, "HTTP Server starting...");
         ESP_LOGI(TAG, "IP Address: %s", ip_str);
         ESP_LOGI(TAG, "Endpoints:");
+        ESP_LOGI(TAG, "  - http://%s/", ip_str);
         ESP_LOGI(TAG, "  - http://%s/status", ip_str);
         ESP_LOGI(TAG, "  - http://%s/addapikey?key=YOUR_KEY", ip_str);
         ESP_LOGI(TAG, "============================================");
@@ -234,6 +311,7 @@ esp_err_t http_server_start(void)
     }
 
     // Register URI handlers
+    httpd_register_uri_handler(s_server, &uri_root);
     httpd_register_uri_handler(s_server, &uri_status);
     httpd_register_uri_handler(s_server, &uri_addapikey);
 
