@@ -3,6 +3,7 @@ idf_component_register(
         "app_main.c"
         "wifi_manager.c"
         "http_client.c"
+        "http_server.c"
         "display_st7735.c"
         "qrcode_gen.c"
         "servo_ctrl.c"
@@ -12,6 +13,7 @@ idf_component_register(
         driver
         esp_wifi
         esp_http_client
+        esp_http_server
         nvs_flash
         esp_netif
         json

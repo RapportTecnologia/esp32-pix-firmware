@@ -23,4 +23,12 @@ bool wifi_manager_is_connected(void);
  */
 esp_err_t wifi_manager_wait_connected(uint32_t timeout_ms);
 
+/**
+ * @brief Get current IP address
+ * @param ip_str Buffer to store IP string
+ * @param ip_str_len Length of the buffer
+ * @return ESP_OK if IP obtained successfully
+ */
+esp_err_t wifi_manager_get_ip(char *ip_str, size_t ip_str_len);
+
 #endif // WIFI_MANAGER_H

@@ -122,3 +122,24 @@ esp_err_t wifi_manager_wait_connected(uint32_t timeout_ms)
         return ESP_ERR_TIMEOUT;
     }
 }
+
+esp_err_t wifi_manager_get_ip(char *ip_str, size_t ip_str_len)
+{
+    if (ip_str == NULL || ip_str_len < 16) {
+        return ESP_ERR_INVALID_ARG;
+    }
+
+    esp_netif_t *netif = esp_netif_get_handle_from_ifkey("WIFI_STA_DEF");
+    if (netif == NULL) {
+        return ESP_ERR_NOT_FOUND;
+    }
+
+    esp_netif_ip_info_t ip_info;
+    esp_err_t err = esp_netif_get_ip_info(netif, &ip_info);
+    if (err != ESP_OK) {
+        return err;
+    }
+
+    snprintf(ip_str, ip_str_len, IPSTR, IP2STR(&ip_info.ip));
+    return ESP_OK;
+}

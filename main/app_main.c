@@ -14,6 +14,7 @@
 
 #include "wifi_manager.h"
 #include "http_client.h"
+#include "http_server.h"
 #include "display_st7735.h"
 #include "qrcode_gen.h"
 #include "servo_ctrl.h"
@@ -252,6 +253,19 @@ void app_main(void)
     ESP_LOGI(TAG, "WiFi conectado!");
     display_show_message("WiFi", "Conectado!", ST7735_GREEN);
     vTaskDelay(pdMS_TO_TICKS(1000));
+    
+    // Start HTTP REST server
+    ESP_LOGI(TAG, "Iniciando servidor HTTP...");
+    if (http_server_start() == ESP_OK) {
+        char ip_str[16];
+        if (wifi_manager_get_ip(ip_str, sizeof(ip_str)) == ESP_OK) {
+            ESP_LOGI(TAG, "Servidor HTTP disponivel em: http://%s", ip_str);
+            display_show_message("HTTP Server", ip_str, ST7735_CYAN);
+            vTaskDelay(pdMS_TO_TICKS(2000));
+        }
+    } else {
+        ESP_LOGE(TAG, "Falha ao iniciar servidor HTTP");
+    }
     
     display_show_message("Pronto", "Pressione o botao", ST7735_WHITE);
     buzzer_beep(1, 200, 1500);
