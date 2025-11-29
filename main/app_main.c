@@ -88,8 +88,8 @@ static void create_charge(float amount, const char *description)
     esp_err_t err = http_create_charge(amount, description, &response);
 
     if (err == ESP_OK && response.success) {
-        strncpy(g_payment_id, response.payment_id, sizeof(g_payment_id) - 1);
-        strncpy(g_qr_data, response.qr_code, sizeof(g_qr_data) - 1);
+        strlcpy(g_payment_id, response.payment_id, sizeof(g_payment_id));
+        strlcpy(g_qr_data, response.qr_code, sizeof(g_qr_data));
         g_amount = response.amount;
 
         // Generate and display QR code
