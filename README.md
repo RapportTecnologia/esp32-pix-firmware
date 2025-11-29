@@ -70,6 +70,26 @@ esp-pix/
 
 > **⚠️ ESP32-P4:** Os GPIOs 14-19 são reservados para comunicação SDIO com o co-processador WiFi (ESP-Hosted). Não utilize esses pinos para outros periféricos.
 
+## Dependências WiFi (ESP32-P4 e chips sem WiFi nativo)
+
+Para chips como o **ESP32-P4** que não possuem WiFi integrado, é necessário adicionar componentes adicionais que permitem usar um co-processador WiFi (ESP-Hosted). Execute os seguintes comandos na raiz do projeto:
+
+```bash
+idf.py add-dependency "espressif/esp_wifi_remote"
+idf.py add-dependency "espressif/esp_hosted"
+```
+
+### O que esses componentes fazem:
+
+| Componente | Descrição |
+| ---------- | --------- |
+| **esp_wifi_remote** | Permite que o ESP32-P4 use a API WiFi padrão (`esp_wifi.h`) delegando as operações para um chip secundário com WiFi (como ESP32-C6). Mantém compatibilidade de código com projetos WiFi existentes. |
+| **esp_hosted** | Implementa a comunicação entre o chip principal (ESP32-P4) e o co-processador WiFi via interface SDIO ou SPI. Gerencia o protocolo de transporte de pacotes de rede. |
+
+> **Nota:** Para chips com WiFi integrado (ESP32, ESP32-S2, ESP32-S3, ESP32-C3, ESP32-C6), esses componentes não são necessários.
+
+---
+
 ## Compilação e Flash
 
 ### 1. Configurar o ambiente ESP-IDF
