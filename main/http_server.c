@@ -24,6 +24,10 @@ static char s_api_key[API_KEY_MAX_LEN] = {0};
 #define NVS_NAMESPACE "esp_pix"
 #define NVS_KEY_API   "api_key"
 
+// Embedded web logo image (JPEG)
+extern const uint8_t _binary_rapport_pix_web_jpg_start[];
+extern const uint8_t _binary_rapport_pix_web_jpg_end[];
+
 /**
  * @brief Load API key from NVS
  */
@@ -48,6 +52,24 @@ static esp_err_t load_api_key_from_nvs(void)
 
     nvs_close(nvs_handle);
     return err;
+}
+
+/**
+ * @brief Handler for GET /rapport-pix-web.jpg (embedded logo image)
+ */
+static esp_err_t logo_handler(httpd_req_t *req)
+{
+    ESP_LOGI(TAG, "GET /rapport-pix-web.jpg");
+
+    const uint8_t *start = _binary_rapport_pix_web_jpg_start;
+    const uint8_t *end   = _binary_rapport_pix_web_jpg_end;
+    size_t len = end - start;
+
+    httpd_resp_set_type(req, "image/jpeg");
+    httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
+    httpd_resp_send(req, (const char *)start, len);
+
+    return ESP_OK;
 }
 
 /**
@@ -94,32 +116,42 @@ static esp_err_t root_handler(httpd_req_t *req)
         "<head>"
         "<meta charset=\"UTF-8\">"
         "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">"
-        "<title>ESP32-PIX</title>"
+        "<title>Café Expresso - Sistema Cognitivo de Cobrança Embarcada</title>"
         "<style>"
         "*{margin:0;padding:0;box-sizing:border-box;}"
-        "body{font-family:system-ui,-apple-system,sans-serif;background:linear-gradient(135deg,#1a1a2e 0%,#16213e 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;color:#fff;}"
-        ".container{max-width:600px;padding:40px;text-align:center;}"
-        "h1{font-size:2.5rem;margin-bottom:10px;background:linear-gradient(90deg,#00d4ff,#00ff88);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}"
-        ".subtitle{color:#888;margin-bottom:30px;font-size:1.1rem;}"
-        ".card{background:rgba(255,255,255,0.05);border-radius:16px;padding:30px;margin:20px 0;border:1px solid rgba(255,255,255,0.1);}"
-        ".card h2{color:#00d4ff;margin-bottom:15px;}"
-        ".card p{color:#aaa;line-height:1.6;}"
-        ".endpoints{text-align:left;margin-top:20px;}"
-        ".endpoint{background:rgba(0,212,255,0.1);padding:12px 16px;border-radius:8px;margin:8px 0;font-family:monospace;font-size:0.9rem;}"
-        ".endpoint span{color:#00ff88;}"
-        "a{color:#00d4ff;text-decoration:none;}"
+        "body{font-family:system-ui,-apple-system,sans-serif;background:#ffeb3b;min-height:100vh;display:flex;align-items:center;justify-content:center;color:#4e342e;}"
+        ".container{max-width:720px;width:100%;padding:32px;text-align:center;}"
+        ".card-shell{background:#ffe082;border-radius:24px;padding:24px;border:4px solid #ff9800;box-shadow:0 12px 30px rgba(0,0,0,0.18);}"
+        ".logo{width:120px;height:120px;border-radius:50%;border:4px solid #ff9800;margin:0 auto 16px auto;display:flex;align-items:center;justify-content:center;background:#fff3e0;font-weight:700;font-size:2.3rem;color:#4e342e;}"
+        ".logo span{font-size:1.4rem;display:block;line-height:1;}"
+        "h1{font-size:2.4rem;margin-bottom:8px;color:#4e342e;}"
+        ".subtitle{color:#5d4037;margin-bottom:20px;font-size:1.05rem;font-weight:500;}"
+        ".badge{display:inline-block;margin-bottom:20px;padding:6px 14px;border-radius:999px;background:#ff9800;color:#fff;font-size:0.85rem;font-weight:600;letter-spacing:0.04em;}"
+        ".grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:8px;}"
+        ".card{background:#fffde7;border-radius:16px;padding:16px 18px;border:1px solid #ffe082;text-align:left;}"
+        ".card h2{color:#5d4037;margin-bottom:10px;font-size:1.1rem;}"
+        ".card p{color:#6d4c41;line-height:1.5;font-size:0.95rem;}"
+        ".endpoints{margin-top:6px;}"
+        ".endpoint{background:#fff3e0;padding:8px 10px;border-radius:8px;margin:4px 0;font-family:monospace;font-size:0.85rem;border:1px dashed #ffb74d;}"
+        ".endpoint span{color:#2e7d32;font-weight:700;margin-right:6px;}"
+        "a{color:#e65100;text-decoration:none;font-weight:500;}"
         "a:hover{text-decoration:underline;}"
-        ".footer{margin-top:30px;color:#666;font-size:0.85rem;}"
+        ".footer{margin-top:20px;color:#6d4c41;font-size:0.8rem;line-height:1.4;}"
         "</style>"
         "</head>"
         "<body>"
         "<div class=\"container\">"
-        "<h1>ESP32-PIX</h1>"
-        "<p class=\"subtitle\">Terminal PIX com ESP32</p>"
+        "<div class=\"card-shell\">"
+        "<div class=\"logo\">CE</div>"
+        "<img src=\"/rapport-pix-web.jpg\" alt=\"Caf\u00e9 Expresso Logo\" style=\"max-width:160px;max-height:160px;border-radius:16px;border:3px solid #ff9800;margin:8px auto;display:block;object-fit:contain;background:#fff3e0;\">"
+        "<span class=\"badge\">Caf\u00e9 Expresso</span>"
+        "<h1>Café Expresso</h1>"
+        "<p class=\"subtitle\">Sistema Cognitivo de Cobrança Embarcada para pagamentos PIX</p>"
+        "<div class=\"grid\">"
         "<div class=\"card\">"
-        "<h2>Sobre o Projeto</h2>"
-        "<p>ESP32-PIX é um terminal de pagamentos PIX baseado em ESP32. "
-        "Permite receber pagamentos instantâneos via QR Code PIX com display integrado.</p>"
+        "<h2>Sobre o Sistema</h2>"
+        "<p>Café Expresso é um sistema embarcado de cobrança via PIX com ESP32, "
+        "integrando display, serviço HTTP e motores/atuadores para automação de vendas.</p>"
         "</div>"
         "<div class=\"card\">"
         "<h2>Endpoints Disponíveis</h2>"
@@ -128,8 +160,9 @@ static esp_err_t root_handler(httpd_req_t *req)
         "<div class=\"endpoint\"><span>GET</span> /addapikey?key=KEY - Configurar API Key</div>"
         "</div>"
         "</div>"
+        "</div>"
         "<div class=\"card\">"
-        "<h2>Obtenha o Projeto</h2>"
+        "<h2>Repositório do Projeto</h2>"
         "<p>Código fonte disponível em:<br>"
         "<a href=\"https://github.com/RapportTecnologia/esp32-pix-firmware\" target=\"_blank\">github.com/RapportTecnologia/esp32-pix-firmware</a></p>"
         "</div>"
@@ -137,7 +170,8 @@ static esp_err_t root_handler(httpd_req_t *req)
         "<p><a href=\"https://rapport.tec.br\" target=\"_blank\">rapport.tec.br</a></p>"
         "<p>E-mail: <a href=\"mailto:admin@rapport.tec.br\">admin@rapport.tec.br</a></p>"
         "<p>WhatsApp: <a href=\"https://wa.me/5585985205490\" target=\"_blank\">(+55 85) 98520-5490</a></p>"
-        "<p style=\"margin-top:15px;\">&copy; 2024 ESP32-PIX Project</p>"
+        "<p style=\"margin-top:10px;\">&copy; 2026 Café Expresso - Sistema Cognitivo de Cobrança Embarcada</p>"
+        "</div>"
         "</div>"
         "</div>"
         "</body>"
@@ -273,6 +307,13 @@ static const httpd_uri_t uri_addapikey = {
     .user_ctx  = NULL
 };
 
+static const httpd_uri_t uri_logo = {
+    .uri       = "/rapport-pix-web.jpg",
+    .method    = HTTP_GET,
+    .handler   = logo_handler,
+    .user_ctx  = NULL
+};
+
 esp_err_t http_server_start(void)
 {
     if (s_server != NULL) {
@@ -314,6 +355,7 @@ esp_err_t http_server_start(void)
     httpd_register_uri_handler(s_server, &uri_root);
     httpd_register_uri_handler(s_server, &uri_status);
     httpd_register_uri_handler(s_server, &uri_addapikey);
+    httpd_register_uri_handler(s_server, &uri_logo);
 
     ESP_LOGI(TAG, "HTTP server started successfully");
     

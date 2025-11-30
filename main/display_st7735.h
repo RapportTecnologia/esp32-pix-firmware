@@ -14,6 +14,8 @@
 #define ST7735_CYAN    0x07FF
 #define ST7735_MAGENTA 0xF81F
 #define ST7735_ORANGE  0xFD20
+// Brown tone for Cafe Expresso theme
+#define ST7735_BROWN   0xA145
 
 /**
  * @brief Initialize the ST7735 display

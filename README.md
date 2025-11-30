@@ -70,6 +70,11 @@ esp-pix/
 
 > **⚠️ ESP32-P4:** Os GPIOs 14-19 são reservados para comunicação SDIO com o co-processador WiFi (ESP-Hosted). Não utilize esses pinos para outros periféricos.
 
+## Dependências para Saida de Audio
+
+idf.py add-dependency "espressif/es8311"
+
+
 ## Dependências WiFi (ESP32-P4 e chips sem WiFi nativo)
 
 Para chips como o **ESP32-P4** que não possuem WiFi integrado, é necessário adicionar componentes adicionais que permitem usar um co-processador WiFi (ESP-Hosted). Execute os seguintes comandos na raiz do projeto:
@@ -252,10 +257,12 @@ MERCADO_PAGO_PUBLIC_KEY=APP_USR-xxxxxxxxxxxxx
 
 Para testes, use os cartões de teste do Mercado Pago:
 
-| Número do Cartão  | CVV | Vencimento | Status   |
-| ------------------- | --- | ---------- | -------- |
-| 5031 4332 1540 6351 | 123 | 11/25      | Aprovado |
-| 4235 6477 2802 5682 | 123 | 11/25      | Recusado |
+| Bandeira         | Número do Cartão    | CVV  | Vencimento | Status   |
+| ---------------- | ------------------- | ---- | ---------- | -------- |
+| Mastercard       | 5031 4332 1540 6351 | 123  | 11/30      | Aprovado |
+| Visa             | 4235 6477 2802 5682 | 123  | 11/30      | Recusado |
+| American Express | 3753 651535 56885   | 1234 | 11/30      | -        |
+| Elo Débito       | 5067 7667 8388 8311 | 123  | 11/30      | -        |
 
 > Consulte a [documentação oficial](https://www.mercadopago.com.br/developers/pt/docs/checkout-api/integration-test/test-cards) para mais cartões de teste.
 

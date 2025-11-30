@@ -18,6 +18,7 @@ idf_component_register(
         esp_netif
         json
         esp_timer
-    EMBED_TXTFILES
+    EMBED_FILES
         "certs/isrg_root_x1.pem"
+        "images/rapport-pix-web.jpg"
 )

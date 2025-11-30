@@ -236,8 +236,8 @@ void app_main(void)
     servo_init();
     display_init();
 
-    // Show welcome message
-    display_show_message("ESP32 PIX", "Iniciando...", ST7735_WHITE);
+    // Show welcome message with Cafe Expresso branding
+    display_show_message("Caf\xC3\xA9 Expresso", "Sistema Cognitivo de Cobranca Embarcada", ST7735_WHITE);
 
     // Initialize WiFi
     ESP_LOGI(TAG, "Conectando ao WiFi...");

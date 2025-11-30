@@ -434,29 +434,42 @@ int16_t display_get_height(void)
 
 void display_show_message(const char *title, const char *msg, uint16_t color)
 {
-    display_fill_screen(ST7735_BLACK);
-    display_set_text_color(color);
+    // Cafe Expresso theme: yellow background, orange frame,
+    // brown title and white body text
+    (void)color; // keep signature but ignore dynamic color
 
-    // Title - centered at top
+    // Background
+    display_fill_screen(ST7735_YELLOW);
+
+    // Outer frame (top/bottom/left/right borders)
+    display_fill_rect(0, 0, ST7735_WIDTH, 4, ST7735_ORANGE);
+    display_fill_rect(0, ST7735_HEIGHT - 4, ST7735_WIDTH, 4, ST7735_ORANGE);
+    display_fill_rect(0, 0, 4, ST7735_HEIGHT, ST7735_ORANGE);
+    display_fill_rect(ST7735_WIDTH - 4, 0, 4, ST7735_HEIGHT, ST7735_ORANGE);
+
+    // Title - centered at top in brown
     display_set_text_size(2);
     int16_t title_len = strlen(title) * 12;  // 6 * 2 = 12 pixels per char
     int16_t title_x = (ST7735_WIDTH - title_len) / 2;
     if (title_x < 0) title_x = 0;
-    display_set_cursor(title_x, 30);
+    display_set_text_color(ST7735_BROWN);
+    display_set_cursor(title_x, 24);
     display_print(title);
 
-    // Message - centered in middle
+    // Message - centered in middle in white
     display_set_text_size(1);
     int16_t msg_len = strlen(msg) * 6;  // 6 pixels per char
     int16_t msg_x = (ST7735_WIDTH - msg_len) / 2;
     if (msg_x < 0) msg_x = 0;
+    display_set_text_color(ST7735_WHITE);
     display_set_cursor(msg_x, 80);
     display_print(msg);
 }
 
 void display_show_qrcode(const uint8_t *data, uint8_t size, float amount)
 {
-    display_fill_screen(ST7735_WHITE);
+    // Cafe Expresso theme background
+    display_fill_screen(ST7735_YELLOW);
 
     int scale = 2;
     int16_t offsetX = (ST7735_WIDTH - size * scale) / 2;
@@ -476,11 +489,11 @@ void display_show_qrcode(const uint8_t *data, uint8_t size, float amount)
         }
     }
 
-    // Display amount
+    // Display amount in brown text
     char amount_str[32];
     snprintf(amount_str, sizeof(amount_str), "%.2f R$", amount / 100.0f);
-    
-    display_set_text_color(ST7735_BLACK);
+
+    display_set_text_color(ST7735_BROWN);
     display_set_text_size(1);
     display_set_cursor(10, ST7735_HEIGHT - 30);
     display_print(amount_str);
